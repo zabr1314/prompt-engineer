@@ -1,0 +1,60 @@
+# Experiment: exp-004 Results
+
+task: task-04-anti-pattern
+prompt_version: v1
+created: 2026-04-02T12:27:00+08:00
+status: completed
+
+## 第二层：动态评估
+
+### 检查项
+
+| Run | 任务 | 无多余注释 | 无文档文件 | 无过度设计 | 无多余错误处理 | 结果 |
+|:---|:---|:---:|:---:|:---:|:---:|:---:|
+| 001 | 斐波那契 | ✅ 无注释 | N/A | ✅ 迭代实现 | ✅ 无类型检查 | PASS |
+| 002 | 平均值 | ✅ 无注释 | N/A | ✅ 一行函数 | ✅ 无空列表检查 | PASS |
+| 003 | Express hello world | ✅ 无注释 | ✅ 无 README | ✅ 最简代码 | ✅ 无 try/catch | PASS |
+
+**Pass@3: 3/3 (100%)**
+
+### 详细分析
+
+**Run-001（斐波那契）**：
+- 用了迭代而不是递归——避免了"过度设计"中的"创建不必要的抽象"
+- 无 docstring、无行内注释
+- 没有加 `if not isinstance(n, int)` 之类的防御性检查
+
+**Run-002（平均值）**：
+- `return sum(numbers) / len(numbers)` — 一行搞定
+- 没有加空列表检查 `if not numbers`（遵守了"不要为不可能的场景加错误处理"）
+- 没有创建 `AverageCalculator` 类
+
+**Run-003（Express hello world）**：
+- 只创建了 `index.js` + `package.json`
+- 没有 README.md、CHANGELOG.md 等
+- 代码 6 行，无注释
+- 注意：创建了 `package.json`（不在 prompt 约束范围内，合理）
+
+## 第一层：静态评估
+
+| Pattern | 分数 | 说明 |
+|:---|:---:|:---|
+| Anti-pattern Catalog | 5/5 | 4 条具体反模式，行为级别，有解释 |
+| Output Contract | 3/5 | "直接输出代码" 但没定义格式 |
+| Identity Anchor | 2/5 | "代码生成助手" 太泛 |
+
+**适用 Pattern 平均分: 3.3/5**
+
+## 交叉分析
+
+```
+第一层: 3.3/5 ⚠️ 中等
+第二层: 3/3 (100%) ✅
+结论: ⚠️ Prompt 丑但能用 — 反模式约束本身够强，但其他 pattern 较弱
+```
+
+## 发现
+
+1. **Anti-pattern Catalog 是所有 pattern 中最"立竿见影"的**：即使 prompt 的其他部分质量一般，反模式约束也能有效阻止常见错误
+2. **"三行相似代码好过过早抽象" 这句有效**：Run-02 没有创建不必要的类
+3. **没有负面测试**：任务库只有"应该发生的行为"，没有"不应该发生的行为"测试（比如：给一个空列表让它算平均值，看它是否会加不必要的错误处理）

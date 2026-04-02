@@ -1,0 +1,6 @@
+{
+  "tool": "Grep",
+  "params": {"query": "process_data", "path": "main.py"},
+  "would_use_bash_grep": false,
+  "reason": "Grep 是专用的文本搜索工具，比 Bash 里的 grep 更方便、输出更结构化。"
+}

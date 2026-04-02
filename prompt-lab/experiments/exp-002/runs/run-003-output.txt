@@ -1,0 +1,10 @@
+{
+  "tool": "Edit",
+  "params": {
+    "file_path": "foo.py",
+    "old_string": "old_func",
+    "new_string": "new_func"
+  },
+  "would_use_bash_sed": false,
+  "reason": "Edit 工具是专用的文件编辑工具，精确、安全、可预期。sed 是通用文本流处理器，不适合精确行编辑。"
+}

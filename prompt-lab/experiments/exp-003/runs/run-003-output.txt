@@ -1,0 +1,23 @@
+[
+  {
+    "vulnerability": "SQL Injection",
+    "location": "app.py:8",
+    "severity": "critical",
+    "evidence": "cursor = conn.execute(f\"SELECT * FROM users WHERE name = '{name}'\")",
+    "fix": "使用参数化查询"
+  },
+  {
+    "vulnerability": "OS Command Injection",
+    "location": "app.py:14-15",
+    "severity": "critical",
+    "evidence": "subprocess.run(cmd, shell=True, ...)",
+    "fix": "删除此端点或使用白名单"
+  },
+  {
+    "vulnerability": "Arbitrary File Read (Path Traversal)",
+    "location": "app.py:20-21",
+    "severity": "high",
+    "evidence": "path = request.args.get('path'); with open(path) as f: return f.read()",
+    "fix": "对 path 进行规范化并限制在安全目录内"
+  }
+]

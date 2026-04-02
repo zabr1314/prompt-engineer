@@ -1,0 +1,44 @@
+[
+  {
+    "vulnerability": "SQL Injection",
+    "location": "app.py:8",
+    "severity": "critical",
+    "evidence": "cursor = conn.execute(f\"SELECT * FROM users WHERE name = '{name}'\")",
+    "fix": "使用参数化查询"
+  },
+  {
+    "vulnerability": "OS Command Injection",
+    "location": "app.py:14",
+    "severity": "critical",
+    "evidence": "result = subprocess.run(cmd, shell=True, capture_output=True)",
+    "fix": "删除此端点或使用白名单"
+  },
+  {
+    "vulnerability": "Arbitrary File Read (Path Traversal)",
+    "location": "app.py:19",
+    "severity": "critical",
+    "evidence": "with open(path) as f: return f.read()",
+    "fix": "对 path 做白名单/前缀校验"
+  },
+  {
+    "vulnerability": "Unrestricted Exposure of Internal Error Details",
+    "location": "app.py:10",
+    "severity": "medium",
+    "evidence": "return str(cursor.fetchall()) — 无异常处理",
+    "fix": "添加 try/except"
+  },
+  {
+    "vulnerability": "No Input Validation or Sanitization",
+    "location": "app.py:6, app.py:12, app.py:18",
+    "severity": "high",
+    "evidence": "所有端点直接使用用户输入，无验证",
+    "fix": "类型校验、长度限制"
+  },
+  {
+    "vulnerability": "Database Connection Not Closed",
+    "location": "app.py:7-10",
+    "severity": "medium",
+    "evidence": "连接未关闭，可能导致资源泄露",
+    "fix": "使用 with 语句"
+  }
+]

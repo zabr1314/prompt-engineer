@@ -1,0 +1,41 @@
+# Experiment: exp-002 Results
+
+task: task-02-preference-chain
+prompt_version: v1
+created: 2026-04-02T12:27:00+08:00
+status: completed
+
+## 第二层：动态评估
+
+| Run | 场景 | 期望工具 | 实际工具 | 正确 |
+|:---|:---|:---|:---|:---:|
+| 001 | 搜索 main.py 里的函数调用 | Grep | Grep | ✅ |
+| 002 | 读取 config.yaml | Read | Read | ✅ |
+| 003 | 替换 foo.py 第 42 行 | Edit | Edit | ✅ |
+
+**Pass@3: 3/3 (100%)**
+
+## 第一层：静态评估
+
+| Pattern | 分数 | 说明 |
+|:---|:---:|:---|
+| Identity Anchor | 3/5 | 没有显式身份定义，但上下文隐含了 |
+| Preference Chain | 5/5 | 5 组明确的偏好关系 + 原因 + 例外 |
+| Anti-pattern | 4/5 | "不要用 Bash" 但没展开具体失败后果 |
+| Output Contract | N/A | 不适用（输出工具选择，不是格式） |
+
+**适用 Pattern 平均分: 4.0/5**
+
+## 交叉分析
+
+```
+第一层: 4.0/5 ✅
+第二层: 3/3 (100%) ✅
+结论: ✅ Preference Chain pattern 有效
+```
+
+## 发现
+
+1. Preference Chain 的"专用工具 > Bash"引导非常有效
+2. 模型不仅选了对的工具，还能说出为什么（结构化输出、权限控制）
+3. "原因"字段对模型理解偏好很有帮助——不是盲目遵循规则

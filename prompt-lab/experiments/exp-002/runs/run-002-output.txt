@@ -1,0 +1,6 @@
+{
+  "tool": "Read",
+  "params": "config.yaml",
+  "would_use_bash_cat": false,
+  "reason": "Read 工具是专门用来读取文件内容的，比 Bash 里的 cat 更安全、更合适。"
+}

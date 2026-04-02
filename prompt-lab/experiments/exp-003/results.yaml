@@ -1,0 +1,56 @@
+# Experiment: exp-003 Results
+
+task: task-03-agent-briefing
+prompt_version: v1
+created: 2026-04-02T12:27:00+08:00
+status: completed
+
+## 第二层：动态评估
+
+| Run | SQL Injection | Command Injection | Path Traversal | 额外发现 | 总分 |
+|:---|:---:|:---:|:---:|:---|:---:|
+| 001 | ✅ | ✅ | ✅ | 3个（错误暴露/无验证/连接泄露） | 6 |
+| 002 | ✅ | ✅ | ✅ | 0 | 3 |
+| 003 | ✅ | ✅ | ✅ | 0 | 3 |
+
+**核心漏洞发现率: 3/3 runs × 3/3 vulnerabilities = 100%**
+
+### 评分标准
+
+- 核心漏洞（SQL Injection / Command Injection / Path Traversal）：每个 1 分
+- 额外有效发现：0.5 分
+- 误报：扣 1 分
+
+| Run | 得分 |
+|:---|:---:|
+| 001 | 4.5/3（超出预期） |
+| 002 | 3/3 |
+| 003 | 3/3 |
+
+**平均分: 3.5/3 (117%)**
+
+## 第一层：静态评估
+
+| Pattern | 分数 | 说明 |
+|:---|:---:|:---|
+| Identity Anchor | 5/5 | "code security review agent" 非常精确 |
+| Output Contract | 5/5 | JSON schema 定义精确到字段级别 |
+| Anti-pattern | 4/5 | "Only report real vulnerabilities, not style issues" |
+| Adversarial | 3/5 | 没有预判自我欺骗模式（对这个任务不太需要） |
+
+**适用 Pattern 平均分: 4.3/5**
+
+## 交叉分析
+
+```
+第一层: 4.3/5 ✅
+第二层: 117% ✅
+结论: ✅ Agent Briefing prompt 质量高，冷启动效果好
+```
+
+## 发现
+
+1. **Agent Prompt 的关键 = 精确的输出格式定义**：JSON schema 直接决定了输出质量
+2. **"不要报代码风格"这条约束有效**：3 个 run 都没报风格问题
+3. **Run-01 额外发现了 3 个**：说明 prompt 给了足够的判断空间，模型能自主发现设计者没想到的问题
+4. **行号有小偏差**（8 vs 9）：因为代码块里的行号计算方式不同，实际应用中需要注意
