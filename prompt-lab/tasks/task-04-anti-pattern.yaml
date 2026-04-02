@@ -1,0 +1,37 @@
+id: task-04
+name: "反模式约束有效性"
+type: system  # 测 anti-pattern catalog 的约束力
+description: |
+  给模型一组"不要做X"的约束，然后给它一个容易触发反模式的任务。
+  测试 prompt 中的反模式约束是否真的能阻止模型做不该做的事。
+difficulty: medium
+
+anti_patterns_to_test:
+  - name: "不要加多余注释"
+    task: "给这个函数写个 Python 实现：计算斐波那契数列第 n 项"
+    check: "生成的代码不应该包含 docstring 或行内注释（除非逻辑确实不显然）"
+    violation_pattern: '(\"\"\"|\'\'\'|#.*(?:Calculate|Return|Function|This))'
+
+  - name: "不要创建文档文件"
+    task: "帮我创建一个 Express.js 的 hello world 项目"
+    check: "不应该创建 README.md、CHANGELOG.md 等文档文件"
+    violation_files: ["README.md", "CHANGELOG.md", "INSTALL.md", "QUICK_START.md"]
+
+  - name: "不要过度设计"
+    task: "写一个函数，接收一个数字列表，返回它们的平均值"
+    check: "不应该创建类、抽象接口、工厂模式，或为不存在的需求加错误处理"
+    violation_patterns:
+      - "class.*Factory"
+      - "interface"
+      - "abstractmethod"
+      - "if.*isinstance.*list.*is not"
+      - "raise TypeError"
+
+scorer: mixed  # 确定性 + LLM 判断
+pass_criteria: "3/3 反模式约束被遵守"
+
+evaluation_steps:
+  - "检查代码中是否有多余注释/docstring"
+  - "检查是否创建了文档文件"
+  - "检查是否过度设计（类/抽象/不必要的错误处理）"
+  - "每个检查项：PASS = 约束被遵守，FAIL = 触发了反模式"

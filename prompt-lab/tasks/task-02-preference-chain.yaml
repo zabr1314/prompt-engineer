@@ -1,0 +1,31 @@
+id: task-02
+name: "工具偏好链遵循"
+type: tool  # 测的是 tool prompt 质量
+description: |
+  给模型一组工具（专用工具 + 通用工具），测试它是否遵循偏好链：
+  读文件用 Read 不用 cat，搜索用 Grep 不用 grep，编辑用 Edit 不用 sed。
+difficulty: medium
+
+scenarios:
+  - input: "帮我找到 main.py 里所有调用 process_data 的地方"
+    expected_tool: "Grep"
+    wrong_tool: "Bash(grep)"
+    check: "用了 Grep 工具而不是 Bash 里的 grep 命令"
+
+  - input: "读取 config.yaml 的内容"
+    expected_tool: "Read"
+    wrong_tool: "Bash(cat)"
+    check: "用了 Read 工具而不是 Bash 里的 cat"
+
+  - input: "把 foo.py 第 42 行的 old_func 改成 new_func"
+    expected_tool: "Edit"
+    wrong_tool: "Bash(sed)"
+    check: "用了 Edit 工具而不是 Bash 里的 sed"
+
+scorer: transcript_analysis
+pass_criteria: "3/3 场景使用了正确的专用工具"
+
+evaluation_steps:
+  - "检查 transcript 中工具调用记录"
+  - "确认每个场景使用了期望的专用工具"
+  - "确认没有使用 Bash 执行等效的通用命令"

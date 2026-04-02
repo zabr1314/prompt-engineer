@@ -1,0 +1,61 @@
+# Experiment: exp-001 Results
+
+task: task-01-json-output
+prompt_version: v1
+created: 2026-04-02T12:07:00+08:00
+status: completed
+
+## 第二层：动态评估（运行效果）
+
+### 验收结果
+
+| Run | 输入 | Valid JSON | Pure JSON | Schema 匹配 | 得分 |
+|:---|:---|:---:|:---:|:---:|:---:|
+| 001 | 今天天气怎么样？ | ✅ | ✅ | ✅ | 4/4 |
+| 002 | 帮我写一个快速排序算法 | ✅ | ✅ | ✅ | 4/4 |
+| 003 | 什么是量子计算？ | ✅ | ✅ | ✅ | 4/4 |
+| 004 | 推荐三本关于AI的书 | ✅ | ✅ | ✅ | 4/4 |
+| 005 | 解释一下什么是递归 | ✅ | ✅ | ✅ | 4/4 |
+
+**Pass@5: 5/5 (100%)**
+**平均分: 4.0/4.0**
+
+### 观察
+
+- 所有输出都是纯 JSON，没有 markdown 代码块包裹
+- category 字段准确匹配了每个问题的语义类别
+- confidence 值合理（天气 0.95、推荐 0.9 略低，符合预期）
+- Run-02 的 answer 字段内包含 markdown 代码块（Python 代码），从 JSON 角度合法
+
+## 第一层：静态评估（Prompt 结构质量）
+
+用 audit-checklist 评估 prompt.md：
+
+| # | Pattern | 分数 | 说明 |
+|:---|:---|:---:|:---|
+| 1 | Identity Anchor | 4/5 | "structured data output assistant" 具体但可以更精确 |
+| 2 | Red Line Declaration | 2/5 | 没有安全红线（对这个简单任务影响不大） |
+| 3 | Preference Chain | N/A | 不适用（没有工具选择） |
+| 4 | Anti-pattern Catalog | 5/5 | 4条具体反模式，行为级别，很精确 |
+| 5 | Risk Gradient | N/A | 不适用（没有风险操作） |
+| 6 | Adversarial Verification | N/A | 不适用（输出格式类任务） |
+| 7 | Context Isolation | N/A | 不适用（单轮任务） |
+| 8 | Output Contract | 5/5 | JSON schema 精确定义 + 规则 + 禁止事项 |
+
+**适用 Pattern 平均分: 4.0/5**
+**N/A 项: 4/8（简单任务不需要全部 pattern）**
+
+## 两层交叉分析
+
+```
+第一层: 4.0/5 ✅
+第二层: 4.0/4 (100%) ✅
+结论: ✅ Skill 有效 — 对简单 System Prompt 任务，生成的 prompt 结构好、效果好
+```
+
+## 发现
+
+1. **Output Contract pattern 效果显著**：精确的 JSON schema + "不要做"清单 = 100% 通过率
+2. **不是所有 pattern 都适用于所有任务**：简单格式任务不需要 Risk Gradient、Context Isolation 等
+3. **Task-01 太简单**：4/4 分制天花板低，无法区分 prompt 的细微差异
+4. **需要更难的任务来真正测试 skill**：task-03（agent briefing）和 task-04（anti-pattern）会有区分度

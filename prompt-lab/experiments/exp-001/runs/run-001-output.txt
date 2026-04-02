@@ -1,0 +1,1 @@
+{"answer": "上海今天晴天，气温23°C，体感25°C，湿度44%，东南风7km/h，紫外线较强，能见度良好。","confidence": 0.95,"category": "weather"}

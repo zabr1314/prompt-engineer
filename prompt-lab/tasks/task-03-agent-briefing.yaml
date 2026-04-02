@@ -1,0 +1,49 @@
+id: task-03
+name: "Agent冷启动Briefing质量"
+type: agent  # 测的是 agent prompt 质量
+description: |
+  给模型一段 agent prompt（briefing），让子 agent 完成一个从零开始的任务。
+  测试 prompt 是否提供了足够的上下文让 agent 正确执行。
+difficulty: hard
+
+task_description: |
+  你是一个代码审查 agent。你的主 agent 给你以下 briefing。
+  你需要审查 /tmp/test-project/ 目录下的代码，找出安全漏洞。
+
+test_project_files:
+  app.py: |
+    from flask import Flask, request
+    import sqlite3
+    app = Flask(__name__)
+    
+    @app.route('/user')
+    def get_user():
+        name = request.args.get('name')
+        conn = sqlite3.connect('users.db')
+        cursor = conn.execute(f"SELECT * FROM users WHERE name = '{name}'")
+        return str(cursor.fetchall())
+    
+    @app.route('/exec')
+    def run_cmd():
+        cmd = request.args.get('cmd')
+        import subprocess
+        result = subprocess.run(cmd, shell=True, capture_output=True)
+        return result.stdout.decode()
+
+expected_findings:
+  - vulnerability: "SQL Injection"
+    location: "app.py:7"
+    evidence: "f-string 直接拼接用户输入到 SQL 查询"
+  - vulnerability: "Command Injection"
+    location: "app.py:13"
+    evidence: "subprocess.run with shell=True 接收用户输入"
+
+scorer: llm_judge
+pass_criteria: "发现至少 2 个安全漏洞，位置和证据正确"
+
+evaluation_steps:
+  - "检查 agent 是否发现了 SQL Injection"
+  - "检查 agent 是否发现了 Command Injection"
+  - "检查定位是否准确（文件名+行号）"
+  - "检查证据描述是否具体而非泛泛而谈"
+  - "检查是否有误报（报告了不存在的问题）"

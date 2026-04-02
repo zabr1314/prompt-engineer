@@ -1,0 +1,1 @@
+{"answer": "1.《生命3.0》- Max Tegmark，探讨AI对未来人类文明的影响；2.《深度学习》- Ian Goodfellow等，深度学习领域的经典教材；3.《AI超级思维》- 李开复，从中国视角解读AI趋势与应用","confidence": 0.9,"category": "recommendation"}

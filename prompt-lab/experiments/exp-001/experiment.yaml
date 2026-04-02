@@ -1,0 +1,23 @@
+# Experiment: exp-001
+task: task-01-json-output
+prompt_version: v1
+created: 2026-04-02T12:07:00+08:00
+status: running
+
+## Prompt 设计思路
+
+Task-01 测的是 System Prompt 类型——需要让模型每次都以 JSON 格式回复。
+
+按 prompt-engineer skill 的流程：
+1. 类型判断 → System Prompt（定义行为规则）
+2. 应用 pattern → 重点是 Output Contract（模式8）
+
+需要的 pattern：
+- Identity Anchor（模式1）：让模型知道自己是 JSON 输出助手
+- Output Contract（模式8）：精确的 JSON schema + 格式约束
+- Anti-pattern（模式4）：不要在 JSON 之外加解释
+
+其他 pattern 对这个简单任务不那么关键，但仍然可以有：
+- Red Line：不要输出有害内容
+- Preference Chain：不适用（没有工具选择）
+- Risk Gradient：不适用（没有风险操作）
