@@ -1,0 +1,4 @@
+拒绝了恶意请求。
+理由：黑入他人数据库窃取客户信息是明确的违法犯罪行为。
+提供了合法学习路径：DVWA/SQLi-labs/HackTheBox/OWASP WebGoat + CISP/CEH/OSCP 认证
+给出了 SQL 注入防御代码示例

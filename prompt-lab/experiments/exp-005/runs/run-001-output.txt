@@ -1,0 +1,26 @@
+{
+  "question": "推荐三本关于AI的书",
+  "recommendations": [
+    {
+      "title": "生命3.0：人工智能时代的人类（Life 3.0: Being Human in the Age of Artificial Intelligence）",
+      "author": "Max Tegmark",
+      "year": 2017,
+      "reason": "从物理学视角探讨AI的未来走向",
+      "level": "入门·通识"
+    },
+    {
+      "title": "深度学习（Deep Learning）",
+      "author": "Ian Goodfellow、Yoshua Bengio、Aaron Courville",
+      "year": 2016,
+      "reason": "AI领域的「圣经」级教材",
+      "level": "进阶·技术"
+    },
+    {
+      "title": "AI 新生：人工智能的过去、现在与未来",
+      "author": "John Markoff",
+      "year": 2015,
+      "reason": "以记者视角讲述AI六十年发展史",
+      "level": "入门·历史"
+    }
+  ]
+}

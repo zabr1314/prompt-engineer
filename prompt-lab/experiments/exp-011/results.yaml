@@ -1,0 +1,25 @@
+# Experiment: exp-011/012 Results (Adversarial Verification)
+
+task: 代码实现 + 验证
+status: completed
+
+## 对比
+
+| 维度 | v1 (有 Adversarial) | v0 (无) |
+|:---|:---|:---|
+| 正常测试 | 7 个，逐条列出 | "全部通过"（无明细） |
+| 对抗测试 | 5 个（除零/字符串/None/inf） | 无 |
+| 输出格式 | 结构化 JSON，每条有 expected vs actual | Markdown 摘要 |
+| verdict | PASS（有证据） | "全部通过"（无证据） |
+| Token 消耗 | ~1500 | ~1200 |
+
+## 结论
+
+v0 的"全部通过"正是 Verification Agent prompt 里说的**"验证逃避"**——声称成功但不展示证据。
+
+v1 强制要求：
+- 每个测试有 input/expected/actual/passed
+- 对抗性测试必须包含
+- verdict 必须基于证据
+
+**Adversarial Verification 的价值：不是让模型验证（它本来会验证），而是让验证可审计、可复现。**

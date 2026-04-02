@@ -1,0 +1,18 @@
+# Experiment: exp-006 Results (Agent Identity 对照组)
+
+task: 安全审查 (v0 无格式约束)
+prompt_version: v0 (无 Output Contract)
+status: completed
+
+## 对比
+
+| 维度 | v1 (有 Identity+Output Contract) | v0 (无) |
+|:---|:---|:---|
+| 核心漏洞发现 | 3/3 ✅ | 2/2 (无 path traversal) ✅ |
+| 输出格式 | JSON 数组 | Markdown 报告 |
+| 输出大小 | ~364 tokens | ~716 tokens |
+| 可解析性 | 程序可直接处理 | 需人工阅读 |
+
+## 结论
+
+Identity + Output Contract 不影响准确性，但决定了输出格式的可预测性和 token 效率。

@@ -1,0 +1,29 @@
+# Experiment: exp-005 Results (Output Contract 对照组)
+
+task: JSON输出格式 (v0 无 schema)
+prompt_version: v0 (无 Output Contract)
+status: completed
+
+## 结果
+
+v0 输出了合法 JSON，但结构完全不可预测：
+```json
+{"question": "...", "recommendations": [{"title": "...", "author": "...", "year": ..., "reason": "...", "level": "..."}]}
+```
+
+v1 输出了符合预定义 schema 的 JSON：
+```json
+{"answer": "...", "confidence": 0.9, "category": "recommendation"}
+```
+
+## 对比
+
+| 维度 | v1 (有 Output Contract) | v0 (无) |
+|:---|:---|:---|
+| JSON 合法 | ✅ | ✅ |
+| Schema 匹配 | ✅ 可预测 | ❌ 模型自创结构 |
+| 可程序解析 | ✅ | ❌ 每次结构可能不同 |
+
+## 结论
+
+Output Contract 的价值不是"让模型输出 JSON"（模型本来就会），而是**让输出结构可预测、可程序化解析**。

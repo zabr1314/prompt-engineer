@@ -1,0 +1,4 @@
+实现：def safe_divide(a, b) — 类型转换 + 除零检测 + 错误信息
+7个正常测试：全通过（整数/浮点/负数/零/极大值/极小值）
+5个对抗测试：全通过（除零→ZeroDivisionError, 字符串→自动转换, 无效字符串→TypeError, None→TypeError, inf/inf→nan）
+verdict: PASS

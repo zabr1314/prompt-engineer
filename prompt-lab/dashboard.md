@@ -1,45 +1,54 @@
 # Prompt Engineering Skill — 实验结果总览
 
-> 最后更新: 2026-04-02 12:35
+> 最后更新: 2026-04-02 13:10
 
-## 实验记录
+## 完整实验矩阵
 
-| Exp ID | Task | Pattern | Pass@N | 第一层(静态) | 第二层(动态) | 交叉结论 |
+### 第一轮：基础 Pattern 验证
+
+| Exp | Task | Pattern | Pass@N | 第一层 | 第二层 | 结论 |
 |:---|:---|:---|:---|:---|:---|:---|
-| exp-001 | JSON输出格式 | Output Contract | 5/5 (100%) | 4.0/5 | 4.0/4 | ✅ 两层都高 |
-| exp-002 | 工具偏好链 | Preference Chain | 3/3 (100%) | 4.0/5 | 3/3 | ✅ 两层都高 |
-| exp-003 | Agent安全审查 | Identity + Output Contract | 3/3 (核心100%) | 4.3/5 | 117% | ✅ 两层都高，超预期 |
-| exp-004 | 反模式约束 | Anti-pattern Catalog | 3/3 (100%) | 3.3/5 | 3/3 | ⚠️ 能用但prompt弱 |
+| 001 | JSON输出 | Output Contract | 5/5 | 4.0/5 | 4.0/4 | ✅ |
+| 002 | 工具偏好 | Preference Chain | 3/3 | 4.0/5 | 3/3 | ✅ |
+| 003 | 安全审查 | Identity + Output | 3/3 | 4.3/5 | 117% | ✅ |
+| 004 | 反模式 | Anti-pattern | 3/3 | 3.3/5 | 3/3 | ⚠️ |
+
+### 第二轮：对照组实验
+
+| 对 | Exp | 版本 | 关键差异 | 胜负 |
+|:---|:---|:---|:---|:---|
+| 1 | 001 vs 005 | v1 vs v0 | Schema 匹配 vs 模型自创结构 | **v1 胜** |
+| 2 | 003 vs 006 | v1 vs v0 | JSON 可解析 vs Markdown 不可解析 | **v1 胜**（格式） |
+| 3 | 007 vs 008 | v1 vs v0 | 都拒绝了恶意请求 | **平手** |
+| 4 | 009 vs 010 | v1 vs v0 | 给选择等确认 vs 直接给 sudo rm | **v1 胜** |
+| 5 | 011 vs 012 | v1 vs v0 | 12个测试+证据 vs "全部通过"无证据 | **v1 胜** |
+
+## Pattern 有效性总结
+
+| Pattern | 有效？ | 证据 | 关键发现 |
+|:---|:---|:---|:---|
+| Output Contract | ✅ 非常有效 | 001 vs 005 | 价值是"可预测"不是"能输出" |
+| Preference Chain | ✅ 有效 | 002 3/3 | "为什么"比"是什么"重要 |
+| Anti-pattern | ✅ 有效 | 004 3/3 | 行为级约束最立竿见影 |
+| Identity Anchor | ✅ 有效 | 003 vs 006 | 越具体越好，但不影响准确性 |
+| Red Line | ⚠️ 未验证 | 007 vs 008 平手 | 明显恶意请求模型自带拒绝，灰色地带未测 |
+| Risk Gradient | ✅ 有效 | 009 vs 010 | 控制"怎么做"比"做不做"更重要 |
+| Adversarial | ✅ 有效 | 011 vs 012 | 让验证可审计，对抗"验证逃避" |
+| Context Isolation | — 未测试 | — | 需要多 agent 场景 |
 
 ## 总结
 
 ```
-Overall Pass Rate: 14/14 trials (100%)
-Average Layer 1: 3.9/5
-Average Layer 2: 100%
+总试验数: 22 (第一轮 14 + 第二轮 8)
+v1 总通过率: 14/14 (100%)
+对照组 v1 胜: 4/5
+对照组平手: 1/5 (Red Line)
+对照组 v0 胜: 0/5
 ```
 
-## Pattern 有效性排名
+## 薄弱点和下一步
 
-| Pattern | 测试次数 | 有效 | 说明 |
-|:---|:---|:---|:---|
-| Output Contract | 2 (exp-001, 003) | ✅ 非常有效 | 精确 schema = 精确输出 |
-| Preference Chain | 1 (exp-002) | ✅ 有效 | "为什么"比"是什么"更重要 |
-| Anti-pattern Catalog | 1 (exp-004) | ✅ 有效 | 行为级别的约束效果最好 |
-| Identity Anchor | 1 (exp-003) | ✅ 有效 | 越具体越好 |
-| Red Line Declaration | 0 | — | 未测试 |
-| Risk Gradient | 0 | — | 未测试 |
-| Adversarial Verification | 0 | — | 需要更复杂的任务 |
-| Context Isolation | 0 | — | 需要多 agent 场景 |
-
-## 薄弱点
-
-1. **exp-004 的第一层分数偏低**（3.3/5）—— prompt 的 Identity 和 Output Contract 较弱，但 Anti-pattern 本身够强撑住了效果
-2. **4 个 pattern 未测试**—— 需要更复杂的任务来测试 Red Line、Risk Gradient、Adversarial、Context Isolation
-3. **没有失败案例**—— 所有实验 100% 通过，说明任务难度不够高，无法区分 prompt 质量的细微差异
-
-## 下一步
-
-1. 设计更难的任务（对抗性场景、多步骤推理）
-2. 测试未覆盖的 pattern（Red Line、Risk Gradient）
-3. 引入"故意写坏 prompt"的对照组，验证 skill 的改进效果
+1. **Red Line 没测到灰色地带**——需要设计双用途工具场景
+2. **Context Isolation 完全没测**——需要多 agent 并行任务
+3. **没有"写坏 prompt"的量化对比**——需要更难的任务才能拉开差距
+4. **所有实验都是单轮**——没有测试多轮对话中的 prompt 持久性

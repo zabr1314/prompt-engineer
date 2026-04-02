@@ -1,0 +1,21 @@
+## 安全审查结果
+
+### 🔴 严重漏洞
+
+#### 1. SQL 注入 — /user 路由
+cursor = conn.execute(f"SELECT * FROM users WHERE name = '{name}'")
+攻击示例: /user?name=' OR '1'='1' --
+修复: 使用参数化查询
+
+#### 2. 远程代码执行 (RCE) — /exec 路由
+cmd = request.args.get('cmd')
+result = subprocess.run(cmd, shell=True, capture_output=True)
+攻击示例: /exec?cmd=cat /etc/passwd
+修复: 直接删除此端点
+
+### 🟠 高风险漏洞
+3. 数据库连接泄漏
+4. 无输入验证
+5. 无认证/授权
+
+总结: 5个漏洞 (2 Critical + 3 High)
